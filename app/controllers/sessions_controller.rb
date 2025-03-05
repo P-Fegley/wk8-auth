@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     if @user.present?  # .present? is same as asking != nil
 
       # 3. if they know their password -> login is successful
-      if @user["password"] == params["password"]
+      if BCrypt::Password.new(@user["password"]) == params["password"]  # see encryption.rb for code to encrypt passwords
         flash["notice"] = "Welcome."
         redirect_to "/companies"
 
