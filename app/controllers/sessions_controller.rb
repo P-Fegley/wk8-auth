@@ -13,7 +13,12 @@ class SessionsController < ApplicationController
 
       # 3. if they know their password -> login is successful
       if BCrypt::Password.new(@user["password"]) == params["password"]  # see encryption.rb for code to encrypt passwords
-        flash["notice"] = "Welcome."
+
+        # --- Begin user session
+        cookies["name"] = "Cookie Monster"
+        session["user_id"] = @user["id"]  # Note: this cookie will be hidden in the cookie jar; you won't be able to see it
+
+        flash["notice"] = "Welcome."  # Flash is basically a one-use cookie
         redirect_to "/companies"
 
       # 4. if the user doesn't know their password -> login fails
@@ -31,6 +36,7 @@ class SessionsController < ApplicationController
 
   def destroy
     # logout the user
+    session["user_id"] = nil  # This ends the login session by getting rid of the user cookie
     flash["notice"] = "Goodbye."
     redirect_to "/login"
   end

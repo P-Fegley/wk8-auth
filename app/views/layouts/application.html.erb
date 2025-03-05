@@ -12,16 +12,23 @@
   <body>
     <p>
       <!-- if no user logged-in, display signup and login links -->
+      <% @user = User.find_by({"id" => session["user_id"]}) %>
+
+      <% if @user == nil %>
+        <a href="/users/new">Sign Up</a>
+        |
+        <a href="/login">Login</a>
+
       <!-- else, if user logged-in, display user name and logout link -->
-      <a href="/users/new">Sign Up</a>
-      |
-      <a href="/login">Login</a>
-      |
-      <a href="/logout">Logout</a>
+      <% else %>
+        Welcome, <%= @user["first_name"] %>
+        |
+        <a href="/logout">Logout </a>
+      <% end %>
     </p>
 
     <p>
-      <%= flash["notice"] %>
+      <%= flash["notice"] %>  <!-- Flash is basically a one-use cookie, assigned here in the sessions controller -->
     </p>
 
     <%= yield %>
